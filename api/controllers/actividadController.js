@@ -5,6 +5,7 @@ const createActividad = async (req, res) => {
     const actividad = await db('actividad').insert(req.body);
     res.json({
       msg: 'Actividad creada',
+      status: 200,
       data: {
         actividad: {
           ...req.body,
@@ -15,6 +16,7 @@ const createActividad = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       msg: 'Eror al crear actividad',
+      status: 500,
       error: JSON.stringify(error),
       body: req.body,
     });
