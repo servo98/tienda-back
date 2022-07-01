@@ -36,4 +36,15 @@ router.get(
   actividadController.getActividadesConCupoNoInscritas
 );
 
+router.get(
+  '/getActividadesInscritasSocio',
+  auth,
+  actividadController.getActividadesInscritasSocio
+);
+
+router.post(
+  '/inscribirActividadSocio',
+  auth,
+  actividadController.inscribirActividadSocio
+);
 export default router;

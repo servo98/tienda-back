@@ -171,7 +171,82 @@ const getActividadesConCupoNoInscritas = async (req, res) => {
       data: actividades[0],
       msg: 'Datos encontrados',
     });
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al buscar act con cupo no inscritas',
+      status: 500,
+      error,
+    });
+  }
+};
+
+const getActividadesInscritasSocio = async (req, res) => {
+  try {
+    const actividades = await db.raw(
+      actividadQueries.getActividadesInscritasSocio,
+      [req.persona.id, req.persona.id]
+    );
+    return res.json({
+      status: 200,
+      data: actividades[0],
+      msg: 'Datos encontrados',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al buscar act con cupo no inscritas',
+      status: 500,
+      error,
+    });
+  }
+};
+
+const inscribirActividadSocio = async (req, res) => {
+  try {
+    const idsDia = [];
+    const idsHorario = [];
+    const horariosActividades = (
+      await db.raw(actividadQueries.getHorariosActividad, req.body.actividadId)
+    )[0];
+
+    horariosActividades.forEach((element) => {
+      idsDia.push(element.id_dia);
+      idsHorario.push(element.id_horario);
+    });
+
+    const hoursMatched = (
+      await db.raw(actividadQueries.getTraslapes, [
+        req.persona.id,
+        idsDia,
+        idsHorario,
+      ])
+    )[0];
+
+    if (hoursMatched.length > 0) {
+      return res.status(400).json({
+        msg: 'Hay traslape en una actividad inscrita',
+        status: 400,
+        error: 'Error',
+      });
+    } else {
+      const registered = await db('socio_actividad').insert({
+        id_actividad: req.body.actividadId,
+        id_socio: req.persona.id,
+      });
+      return res.status(200).json({
+        msg: 'Hay traslape en una actividad inscrita',
+        status: 200,
+        data: {
+          actividad: registered[0],
+        },
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error 💀',
+      status: 500,
+      error,
+    });
+  }
 };
 
 export {
@@ -184,4 +259,6 @@ export {
   getActividadesSinInstructores,
   getActividadesSinSuplente,
   getActividadesConCupoNoInscritas,
+  getActividadesInscritasSocio,
+  inscribirActividadSocio,
 };
