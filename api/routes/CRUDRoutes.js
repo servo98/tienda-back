@@ -1,18 +1,20 @@
 import express from 'express';
-import { actividadController } from '../controllers/index.js';
+import { creteCRUDController } from '../controllers/index.js';
 
 const createRoutes = (singular, plural) => {
+  const crudController = creteCRUDController(singular, plural);
+
   const router = express.Router();
 
-  router.post(`/${plural}`, actividadController.createActividad);
+  router.post(`/${plural}`, crudController.create);
 
-  router.get(`/${plural}`, actividadController.getAllActividads);
+  router.get(`/${plural}`, crudController.getAll);
 
-  router.get(`/${plural}/:id`, actividadController.getActividad);
+  router.get(`/${plural}/:id`, crudController.getById);
 
-  router.put(`/${plural}/:id`, actividadController.updateActividad);
+  router.put(`/${plural}/:id`, crudController.udpate);
 
-  router.delete(`/${plural}/:id`, actividadController.deleteActividad);
+  router.delete(`/${plural}/:id`, crudController.delete);
 
   return router;
 };

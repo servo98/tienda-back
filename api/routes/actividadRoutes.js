@@ -13,4 +13,9 @@ router.put('/actividades/:id', actividadController.updateActividad);
 
 router.delete('/actividades/:id', actividadController.deleteActividad);
 
+router.get(
+  '/getActividadesConInstructores',
+  actividadController.getActividadesConInstructores
+);
+
 export default router;

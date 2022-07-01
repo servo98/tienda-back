@@ -1,5 +1,9 @@
 import express from 'express';
-import { personaRoutes, actividadesRoutes } from './routes/index.js';
+import {
+  personaRoutes,
+  actividadesRoutes,
+  CRUDRoutes,
+} from './routes/index.js';
 
 const api = express();
 
@@ -11,6 +15,17 @@ api.get('/status', (req, res) => {
     msg: 'API Funcionando',
   });
 });
+
+const routes = [
+  {
+    singular: 'persona',
+    plural: 'personas',
+  },
+  {
+    singular: 'actividade',
+    plural: 'actividades',
+  },
+];
 
 api.use(personaRoutes);
 api.use(actividadesRoutes);

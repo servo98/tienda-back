@@ -1,4 +1,6 @@
 import db from '../config/database.js';
+1;
+import actividadQueries from '../queries/actividadQueries.js';
 
 const createActividad = async (req, res) => {
   try {
@@ -94,10 +96,32 @@ const deleteActividad = async (req, res) => {
   }
 };
 
+const getActividadesConInstructores = async (req, res) => {
+  try {
+    const actividades = await db.raw(
+      actividadQueries.getActividadesConInstructores
+    );
+    return res.json({
+      status: 200,
+      msg: 'Actividades encontradas',
+      data: {
+        actividades: actividades[0],
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al buscar actividades con instructores',
+      error,
+      status: 500,
+    });
+  }
+};
+
 export {
   createActividad,
   getAllActividads,
   getActividad,
   updateActividad,
   deleteActividad,
+  getActividadesConInstructores,
 };
