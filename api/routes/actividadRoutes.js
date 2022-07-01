@@ -3,14 +3,14 @@ import { actividadController } from '../controllers/index.js';
 
 const router = express.Router();
 
-router.post('/actividades', personaController.createActividad);
+router.post('/actividades', actividadController.createActividad);
 
-router.get('/actividades', personaController.getAllActividads);
+router.get('/actividades', actividadController.getAllActividads);
 
-router.get('/actividades/:id', personaController.getActividad);
+router.get('/actividades/:id', actividadController.getActividad);
 
-router.put('/actividades/:id', personaController.updateActividad);
+router.put('/actividades/:id', actividadController.updateActividad);
 
-router.delete('/actividades/:id', personaController.deleteActividad);
+router.delete('/actividades/:id', actividadController.deleteActividad);
 
 export default router;

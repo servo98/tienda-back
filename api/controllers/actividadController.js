@@ -18,7 +18,6 @@ const createActividad = async (req, res) => {
       msg: 'Eror al crear actividad',
       status: 500,
       error: JSON.stringify(error),
-      data: req.body,
     });
   }
 };

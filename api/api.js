@@ -1,5 +1,5 @@
 import express from 'express';
-import { personaRoutes } from './routes/index.js';
+import { personaRoutes, actividadesRoutes } from './routes/index.js';
 
 const api = express();
 
@@ -13,5 +13,6 @@ api.get('/status', (req, res) => {
 });
 
 api.use(personaRoutes);
+api.use(actividadesRoutes);
 
 export default api;
