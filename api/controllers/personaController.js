@@ -11,11 +11,13 @@ const createPersona = async (req, res) => {
           id: persona[0],
         },
       },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Eror al crear persona',
       error,
+      status: 500,
     });
   }
 };
@@ -26,11 +28,13 @@ const getAllPersonas = async (req, res) => {
     return res.json({
       msg: 'Personas obtenidas',
       data: { personas },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al obtener personas',
       error,
+      status: 500,
     });
   }
 };
@@ -38,6 +42,8 @@ const getAllPersonas = async (req, res) => {
 const getPersona = async (req, res) => {
   return res.status(400).json({
     msg: 'Usa la ruta de /personas con filtros en el body',
+    status: 200,
+    data: [],
   });
 };
 
@@ -45,8 +51,10 @@ const updatePersona = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (!id) {
-    return res.status(401).json({
+    return res.status(400).json({
       msg: 'Id required',
+      status: 400,
+      error: 'id required',
     });
   }
   try {
@@ -56,11 +64,13 @@ const updatePersona = async (req, res) => {
       data: {
         persona: newPersona,
       },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al actualizar persona',
       error,
+      status: 500,
     });
   }
 };
@@ -74,11 +84,13 @@ const deletePersona = async (req, res) => {
       data: {
         persona: deleted,
       },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al borrar persona',
       error,
+      status: 500,
     });
   }
 };

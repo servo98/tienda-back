@@ -28,11 +28,13 @@ const getAllActividads = async (req, res) => {
     return res.json({
       msg: 'Actividads obtenidas',
       data: { actividades },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al obtener actividades',
       error,
+      status: 500,
     });
   }
 };
@@ -40,6 +42,8 @@ const getAllActividads = async (req, res) => {
 const getActividad = async (req, res) => {
   return res.status(400).json({
     msg: 'Usa la ruta de /actividades con filtros en el body',
+    status: 200,
+    data: [],
   });
 };
 
@@ -49,6 +53,7 @@ const updateActividad = async (req, res) => {
   if (!id) {
     return res.status(401).json({
       msg: 'Id required',
+      status: 400,
     });
   }
   try {
@@ -58,11 +63,13 @@ const updateActividad = async (req, res) => {
       data: {
         actividad: newActividad,
       },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al actualizar actividad',
       error,
+      status: 500,
     });
   }
 };
@@ -76,11 +83,13 @@ const deleteActividad = async (req, res) => {
       data: {
         actividad: deleted,
       },
+      status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al borrar actividad',
       error,
+      status: 500,
     });
   }
 };
