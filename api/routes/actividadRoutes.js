@@ -47,4 +47,10 @@ router.post(
   auth,
   actividadController.inscribirActividadSocio
 );
+
+router.put(
+  '/inscribirActividadInstructor',
+  auth,
+  actividadController.inscribirActividadInstructor
+);
 export default router;

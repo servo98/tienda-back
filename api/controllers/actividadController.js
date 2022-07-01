@@ -216,6 +216,7 @@ const inscribirActividadSocio = async (req, res) => {
     const hoursMatched = (
       await db.raw(actividadQueries.getTraslapes, [
         req.persona.id,
+        req.persona.id,
         idsDia,
         idsHorario,
       ])
@@ -249,6 +250,60 @@ const inscribirActividadSocio = async (req, res) => {
   }
 };
 
+const inscribirActividadInstructor = async (req, res) => {
+  try {
+    const idsDia = [];
+    const idsHorario = [];
+    const horariosActividades = (
+      await db.raw(actividadQueries.getHorariosActividad, req.body.actividadId)
+    )[0];
+
+    horariosActividades.forEach((element) => {
+      idsDia.push(element.id_dia);
+      idsHorario.push(element.id_horario);
+    });
+
+    const hoursMatched = (
+      await db.raw(actividadQueries.getTraslapesInstructores, [
+        req.persona.id,
+        req.persona.id,
+        idsDia,
+        idsHorario,
+      ])
+    )[0];
+
+    if (hoursMatched.length > 0) {
+      return res.status(400).json({
+        msg: 'Hay traslape en una actividad inscrita',
+        status: 400,
+        error: 'Error',
+      });
+    } else {
+      const registered = await db('actividad')
+        .update({
+          [req.body.instructor ? 'id_instructor' : 'id_suplente']:
+            req.persona.id,
+        })
+        .where({
+          id: req.body.actividadId,
+        });
+      return res.status(200).json({
+        msg: 'Actividad actualizada 👍',
+        status: 200,
+        data: {
+          actividad: registered[0],
+        },
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error 💀',
+      status: 500,
+      error,
+    });
+  }
+};
+
 export {
   createActividad,
   getAllActividads,
@@ -261,4 +316,5 @@ export {
   getActividadesConCupoNoInscritas,
   getActividadesInscritasSocio,
   inscribirActividadSocio,
+  inscribirActividadInstructor,
 };
