@@ -35,11 +35,20 @@ const getAllPersonas = async (req, res) => {
   }
 };
 
-const getPersona = async (req, res) => {};
+const getPersona = async (req, res) => {
+  return res.status(400).json({
+    msg: 'Usa la ruta de /personas con filtros en el body',
+  });
+};
 
 const updatePersona = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
+  if (!id) {
+    return res.status(401).json({
+      msg: 'Id required',
+    });
+  }
   try {
     const newPersona = await db('persona').where({ id }).update(body);
     return res.json({
@@ -49,11 +58,30 @@ const updatePersona = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(500);
+    return res.status(500).json({
+      msg: 'Error al actualizar persona',
+      error,
+    });
   }
 };
 
-const deletePersona = async (req, res) => {};
+const deletePersona = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = await db('persona').where({ id }).del();
+    return res.json({
+      msg: 'Persona eliminada',
+      data: {
+        persona: deleted,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al borrar persona',
+      error,
+    });
+  }
+};
 
 export {
   createPersona,
