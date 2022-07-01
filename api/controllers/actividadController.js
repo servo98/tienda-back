@@ -96,7 +96,7 @@ const deleteActividad = async (req, res) => {
   }
 };
 
-const getActividadesConInstructores = async (req, res) => {
+const getActividadesConInstructores = async (_, res) => {
   try {
     const actividades = await db.raw(
       actividadQueries.getActividadesConInstructores
@@ -117,6 +117,63 @@ const getActividadesConInstructores = async (req, res) => {
   }
 };
 
+const getActividadesSinInstructores = async (_, res) => {
+  try {
+    const actividades = await db.raw(
+      actividadQueries.getActividadesSinInstructores
+    );
+
+    return res.json({
+      status: 200,
+      msg: 'Actividades encontradas',
+      data: {
+        actividades: actividades[0],
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al buscar actividades sin instructores',
+      error,
+      status: 500,
+    });
+  }
+};
+
+const getActividadesSinSuplente = async (_, res) => {
+  try {
+    const actividades = await db.raw(
+      actividadQueries.getActividadesSinSuplente
+    );
+    return res.json({
+      status: 200,
+      msg: 'Actividades encontradas',
+      data: {
+        actividades: actividades[0],
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al buscar actividades sin suplente',
+      error,
+      status: 500,
+    });
+  }
+};
+
+const getActividadesConCupoNoInscritas = async (req, res) => {
+  try {
+    const actividades = await db.raw(
+      actividadQueries.getActividadesConCupoNoInscritas,
+      req.persona.id
+    );
+    return res.json({
+      status: 200,
+      data: actividades[0],
+      msg: 'Datos encontrados',
+    });
+  } catch (error) {}
+};
+
 export {
   createActividad,
   getAllActividads,
@@ -124,4 +181,7 @@ export {
   updateActividad,
   deleteActividad,
   getActividadesConInstructores,
+  getActividadesSinInstructores,
+  getActividadesSinSuplente,
+  getActividadesConCupoNoInscritas,
 };

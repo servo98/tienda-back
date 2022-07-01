@@ -2,6 +2,7 @@ import express from 'express';
 import {
   personaRoutes,
   actividadesRoutes,
+  authRoutes,
   CRUDRoutes,
 } from './routes/index.js';
 
@@ -29,5 +30,6 @@ const routes = [
 
 api.use(personaRoutes);
 api.use(actividadesRoutes);
+api.use(authRoutes);
 
 export default api;
