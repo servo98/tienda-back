@@ -216,7 +216,6 @@ const inscribirActividadSocio = async (req, res) => {
     const hoursMatched = (
       await db.raw(actividadQueries.getTraslapes, [
         req.persona.id,
-        req.persona.id,
         idsDia,
         idsHorario,
       ])
@@ -233,11 +232,37 @@ const inscribirActividadSocio = async (req, res) => {
         id_actividad: req.body.actividadId,
         id_socio: req.persona.id,
       });
+      const actividadCosto = (
+        await db('actividad').select('costo').where({
+          id: req.body.actividadId,
+        })
+      )[0];
+
+      let pago;
+      //Si cuesta
+      if (actividadCosto > 0) {
+        const today = new Date();
+        const final = new Date();
+        final.setMonth(today.getMonth() + 1);
+
+        const pagoBody = {
+          id_persona: req.persona.id,
+          fecha_pago: new Date(),
+          id_tipo: 3,
+          monto: actividadCosto,
+          id_estado: 1,
+          periodo_inicial: today,
+          periodo_final: final,
+          fecha_corte: final,
+        };
+        pago = await db('pago').insert(pagoBody);
+      }
       return res.status(200).json({
-        msg: 'Hay traslape en una actividad inscrita',
+        msg: 'Se inscribió exitosamente el socio',
         status: 200,
         data: {
           actividad: registered[0],
+          pago,
         },
       });
     }
@@ -245,7 +270,7 @@ const inscribirActividadSocio = async (req, res) => {
     return res.status(500).json({
       msg: 'Error 💀',
       status: 500,
-      error,
+      error: error.message,
     });
   }
 };
@@ -304,6 +329,57 @@ const inscribirActividadInstructor = async (req, res) => {
   }
 };
 
+const bajaActividadSocio = async (req, res) => {
+  const { id_actividad } = req.params;
+  try {
+    const deleted = await db('socio_actividad')
+      .where({ id_actividad, id_socio: req.persona.id })
+      .del();
+    return res.json({
+      msg: 'Actividad dada de baja',
+      status: 200,
+      data: {
+        actividad: deleted,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al dar de baja 💀',
+      status: 500,
+      error: error.message,
+    });
+  }
+};
+
+const bajaActividadInstructor = async (req, res) => {
+  const { id_actividad } = req.params;
+  const isInstuctor = req.body.instructor;
+  const idtype = isInstuctor ? 'id_instructor' : 'id_suplente';
+  try {
+    const updated = await db('actividad')
+      .where({
+        id: id_actividad,
+        [idtype]: req.persona.id,
+      })
+      .update({
+        [idtype]: -1,
+      });
+    return res.json({
+      msg: `${isInstuctor ? 'Instructor' : 'Suplente'} dado de baja`,
+      status: 200,
+      data: {
+        actividad: updated,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al dar de baja 💀',
+      status: 500,
+      error: error.message,
+    });
+  }
+};
+
 export {
   createActividad,
   getAllActividads,
@@ -317,4 +393,6 @@ export {
   getActividadesInscritasSocio,
   inscribirActividadSocio,
   inscribirActividadInstructor,
+  bajaActividadSocio,
+  bajaActividadInstructor,
 };

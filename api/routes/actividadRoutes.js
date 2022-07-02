@@ -53,4 +53,17 @@ router.put(
   auth,
   actividadController.inscribirActividadInstructor
 );
+
+router.delete(
+  '/bajaActividadSocio/:id_actividad',
+  auth,
+  actividadController.bajaActividadSocio
+);
+
+router.put(
+  '/bajaActividadInstructor/:id_actividad',
+  auth,
+  actividadController.bajaActividadInstructor
+);
+
 export default router;
