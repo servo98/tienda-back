@@ -173,11 +173,31 @@ const getActividadesConCupoNoInscritas = async (req, res) => {
   }
 };
 
+const getActividadesInscritasInstructor = async (req, res) => {
+  try {
+    const actividades = await db.raw(
+      actividadQueries.getActividadesInscritasInstructor,
+      [req.persona.id, req.persona.id]
+    );
+    return res.json({
+      status: 200,
+      data: actividades[0],
+      msg: 'Datos encontrados',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al buscar act con cupo no inscritas',
+      status: 500,
+      error,
+    });
+  }
+};
+
 const getActividadesInscritasSocio = async (req, res) => {
   try {
     const actividades = await db.raw(
       actividadQueries.getActividadesInscritasSocio,
-      [req.persona.id, req.persona.id]
+      req.persona.id
     );
     return res.json({
       status: 200,
@@ -387,4 +407,5 @@ export {
   inscribirActividadInstructor,
   bajaActividadSocio,
   bajaActividadInstructor,
+  getActividadesInscritasInstructor,
 };
