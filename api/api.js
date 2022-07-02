@@ -3,7 +3,8 @@ import {
   personaRoutes,
   actividadesRoutes,
   authRoutes,
-  CRUDRoutes,
+  pagoRoutes,
+  createRoutes,
 } from './routes/index.js';
 
 const api = express();
@@ -17,20 +18,21 @@ api.get('/status', (req, res) => {
   });
 });
 
-const routes = [
-  {
-    singular: 'persona',
-    plural: 'personas',
-  },
-  {
-    singular: 'actividade',
-    plural: 'actividades',
-  },
-];
+// const routes = [
+//   {
+//     singular: 'pago',
+//     plural: 'pagos',
+//   },
+// ];
 
 api.use(personaRoutes);
 api.use(actividadesRoutes);
 api.use(authRoutes);
+api.use(pagoRoutes);
+
+// routes.forEach((ruta) => {
+//   api.use(createRoutes(ruta.singular, ruta.plural));
+// });
 
 api.use((err, req, res, nex) => {
   return res.status(500).json({

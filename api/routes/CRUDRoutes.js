@@ -12,7 +12,7 @@ const createRoutes = (singular, plural) => {
 
   router.get(`/${plural}/:id`, crudController.getById);
 
-  router.put(`/${plural}/:id`, crudController.udpate);
+  router.put(`/${plural}/:id`, crudController.update);
 
   router.delete(`/${plural}/:id`, crudController.delete);
 

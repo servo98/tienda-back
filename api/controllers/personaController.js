@@ -3,6 +3,18 @@ import db from '../config/database.js';
 const createPersona = async (req, res) => {
   try {
     const persona = await db('persona').insert(req.body);
+    let pago;
+    //Si es socio
+    if (req.body.id_rol == 3) {
+      const pagoBody = {
+        id_persona: persona[0],
+        fecha_pago: new Date(),
+        id_tipo: 1,
+        monto: 300,
+        id_estado: 2,
+      };
+      pago = await db('pago').insert(pagoBody);
+    }
     res.json({
       msg: 'Persona creada',
       data: {
@@ -10,6 +22,7 @@ const createPersona = async (req, res) => {
           ...req.body,
           id: persona[0],
         },
+        pago: pago ? pago[0] : null,
       },
       status: 200,
     });
