@@ -12,27 +12,18 @@ const api = express();
 api.use(express.json());
 api.use(express.urlencoded({ extended: true }));
 
-api.get('/status', (req, res) => {
+api.get('/status', (_, res) => {
   return res.json({
     msg: 'API Funcionando',
   });
 });
 
-// const routes = [
-//   {
-//     singular: 'pago',
-//     plural: 'pagos',
-//   },
-// ];
+api.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 api.use(personaRoutes);
 api.use(actividadesRoutes);
 api.use(authRoutes);
 api.use(pagoRoutes);
-
-// routes.forEach((ruta) => {
-//   api.use(createRoutes(ruta.singular, ruta.plural));
-// });
 
 api.use((err, req, res, nex) => {
   return res.status(500).json({
