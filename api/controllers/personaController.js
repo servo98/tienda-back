@@ -3,17 +3,31 @@ import db from '../config/database.js';
 const createPersona = async (req, res) => {
   try {
     const persona = await db('persona').insert(req.body);
-    let pago;
+    let pagos = [];
     //Si es socio
     if (req.body.id_rol == 3) {
-      const pagoBody = {
-        id_persona: persona[0],
-        fecha_pago: new Date(),
-        id_tipo: 1,
-        monto: 300,
-        id_estado: 2,
-      };
-      pago = await db('pago').insert(pagoBody);
+      pagos.push(
+        (
+          await db('pago').insert({
+            id_persona: persona[0],
+            fecha_pago: new Date(),
+            id_tipo: 1,
+            monto: 300,
+            id_estado: 2,
+          })
+        )[0]
+      );
+      pagos.push(
+        (
+          await db('pago').insert({
+            id_persona: persona[0],
+            fecha_pago: new Date(),
+            id_tipo: 2,
+            monto: 100,
+            id_estado: 2,
+          })
+        )[0]
+      );
     }
     res.json({
       msg: 'Persona creada',
@@ -22,7 +36,7 @@ const createPersona = async (req, res) => {
           ...req.body,
           id: persona[0],
         },
-        pago: pago ? pago[0] : null,
+        pagos: pagos ? pagos : null,
       },
       status: 200,
     });
@@ -68,6 +82,9 @@ const getPersona = async (req, res) => {
 const updatePersona = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
+  if (req.persona.id_rol != 1) {
+    delete body.id_rol;
+  }
   if (!id) {
     return res.status(400).json({
       msg: 'Id required',

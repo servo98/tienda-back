@@ -31,4 +31,16 @@ const auth = (req, res, next) => {
   }
 };
 
-export { auth };
+const permisos = (roles) => (req, res, next) => {
+  if (roles.includes(req.persona.id_rol)) {
+    next();
+  } else {
+    return res.status(400).json({
+      msg: 'No tienes permisos',
+      error: 'Error 💀',
+      status: 400,
+    });
+  }
+};
+
+export { auth, permisos };

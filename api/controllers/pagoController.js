@@ -23,6 +23,9 @@ const createPago = async (req, res) => {
 };
 
 const getAllPagos = async (req, res) => {
+  if (req.persona.id_rol != 1) {
+    req.query.id_persona = req.persona.id;
+  }
   try {
     const pagos = await db('pago').select('*').where(req.query);
     return res.json({
@@ -39,36 +42,47 @@ const getAllPagos = async (req, res) => {
   }
 };
 
-const getPago = async (req, res) => {
-  return res.status(400).json({
-    msg: 'Usa la ruta de /pagos con filtros en el body',
-    status: 200,
-    data: [],
-  });
-};
-
 const updatePago = async (req, res) => {
   const { id } = req.params;
-  const { body } = req;
-  if (!id) {
-    return res.status(401).json({
-      msg: 'Id required',
-      status: 400,
-    });
-  }
+  const { pago } = req.body;
   try {
-    const newPago = await db('pago').where({ id }).update(body);
+    let pagos = [];
+    await db('pago')
+      .where({ id })
+      .update({
+        ...pago,
+        fecha_pago: pago.id_estado == 2 ? new Date() : undefined,
+      });
+    const actualizado = (await db('pago').select('*').where({ id }))[0];
+    delete actualizado.id;
+    delete actualizado.fecha_pago;
+    pagos.push(id);
+    if (actualizado.id_tipo > 1 && req.body.continuar) {
+      const today = new Date();
+      const final = new Date();
+      final.setMonth(today.getMonth() + 1);
+      const pago = (
+        await db('pago').insert({
+          ...actualizado,
+          id_estado: 1,
+          periodo_inicial: today,
+          periodo_final: final,
+          fecha_corte: final,
+        })
+      )[0];
+      pagos.push(pago);
+    }
     return res.json({
       msg: 'Pago actualizada',
       data: {
-        pago: newPago,
+        pagos,
       },
       status: 200,
     });
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al actualizar pago',
-      error,
+      error: error.message,
       status: 500,
     });
   }
@@ -94,4 +108,4 @@ const deletePago = async (req, res) => {
   }
 };
 
-export { createPago, getAllPagos, getPago, updatePago, deletePago };
+export { createPago, getAllPagos, updatePago, deletePago };

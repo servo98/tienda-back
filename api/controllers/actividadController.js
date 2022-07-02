@@ -48,14 +48,6 @@ const getAllActividads = async (req, res) => {
   }
 };
 
-const getActividad = async (req, res) => {
-  return res.status(400).json({
-    msg: 'Usa la ruta de /actividades con filtros en el body',
-    status: 200,
-    data: [],
-  });
-};
-
 const updateActividad = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
@@ -390,7 +382,6 @@ const bajaActividadInstructor = async (req, res) => {
 export {
   createActividad,
   getAllActividads,
-  getActividad,
   updateActividad,
   deleteActividad,
   getActividadesConInstructores,
