@@ -60,6 +60,13 @@ router.get(
   actividadController.getActividadesInscritasSocio
 );
 
+router.get(
+  '/getActividadesInscritasInstructor',
+  auth,
+  permisos([2]),
+  actividadController.getActividadesInscritasInstructor
+);
+
 router.post(
   '/inscribirActividadSocio',
   auth,
