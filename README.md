@@ -37,3 +37,7 @@ Este proyecto necesita unas cuantas variables de entorno para poder ejercutarse 
 ## Ejecución completa (no se reninicia)
 
 `$ npm start`
+
+# Deploy URL
+
+`https://tienda-proyecto-back.herokuapp.com/`

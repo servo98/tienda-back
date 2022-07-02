@@ -12,13 +12,15 @@ const api = express();
 api.use(express.json());
 api.use(express.urlencoded({ extended: true }));
 
+api.get('/', (_, res) => {
+  res.send('Bienvenido a la API DeGimnasio');
+});
+
 api.get('/status', (_, res) => {
   return res.json({
     msg: 'API Funcionando',
   });
 });
-
-api.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 api.use(personaRoutes);
 api.use(actividadesRoutes);
