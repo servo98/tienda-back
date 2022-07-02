@@ -26,10 +26,17 @@ const createActividad = async (req, res) => {
 
 const getAllActividads = async (req, res) => {
   try {
-    const actividades = await db('actividad').select('*').where(req.query);
+    const actividades = (
+      await db.raw(actividadQueries.getAllPopulatedActivities)
+    )[0];
     return res.json({
       msg: 'Actividads obtenidas',
-      data: { actividades },
+      data: {
+        actividades: actividades.map((actividad) => ({
+          ...actividad,
+          horario: actividad.horario.split(','),
+        })),
+      },
       status: 200,
     });
   } catch (error) {

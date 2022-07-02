@@ -10,9 +10,9 @@ router.get(
 );
 
 router.post('/actividades', auth, actividadController.createActividad);
-router.get('/actividades', auth, actividadController.getAllActividads);
+router.get('/actividades', actividadController.getAllActividads);
 
-router.get('/actividades/:id', auth, actividadController.getActividad);
+router.get('/actividades/:id', actividadController.getActividad);
 
 router.put('/actividades/:id', auth, actividadController.updateActividad);
 

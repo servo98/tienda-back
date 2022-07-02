@@ -16,11 +16,14 @@ const login = async (req, res) => {
         error: 'Datos incorrectos',
       });
     }
+
+    delete persona.password;
     const token = jwt.encode(persona, config.auth.secret);
     return res.json({
       msg: 'Login correcto',
       data: {
         token,
+        persona,
       },
       status: 200,
     });

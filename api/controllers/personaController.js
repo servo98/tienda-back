@@ -40,7 +40,12 @@ const getAllPersonas = async (req, res) => {
     const personas = await db('persona').select('*').where(req.query);
     return res.json({
       msg: 'Personas obtenidas',
-      data: { personas },
+      data: {
+        personas: personas.map((persona) => ({
+          ...persona,
+          password: undefined,
+        })),
+      },
       status: 200,
     });
   } catch (error) {
