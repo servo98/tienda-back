@@ -8,8 +8,6 @@ router.post('/personas', auth, permisos([1]), personaController.createPersona);
 
 router.get('/personas', auth, permisos([1]), personaController.getAllPersonas);
 
-router.get('/personas/:id', auth, permisos([1]), personaController.getPersona);
-
 router.put(
   '/personas/:id',
   auth,

@@ -8,7 +8,9 @@ import joi from 'joi';
  */
 const withValidation = (schema) => async (req, res, next) => {
   try {
-    const value = await schema.validateAsync(req.body);
+    const response = await schema.validateAsync(req.body);
+    console.log(response);
+    next();
   } catch (error) {
     return res.status(400).json({
       status: 400,

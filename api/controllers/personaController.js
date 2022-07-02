@@ -71,29 +71,16 @@ const getAllPersonas = async (req, res) => {
   }
 };
 
-const getPersona = async (req, res) => {
-  return res.status(400).json({
-    msg: 'Usa la ruta de /personas con filtros en el body',
-    status: 200,
-    data: [],
-  });
-};
-
 const updatePersona = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (req.persona.id_rol != 1) {
     delete body.id_rol;
   }
-  if (!id) {
-    return res.status(400).json({
-      msg: 'Id required',
-      status: 400,
-      error: 'id required',
-    });
-  }
   try {
-    const newPersona = await db('persona').where({ id }).update(body);
+    const newPersona = await db('persona')
+      .where({ id: req.persona.id_rol != 1 ? req.persona.id : id })
+      .update(body);
     return res.json({
       msg: 'Persona actualizada',
       data: {
@@ -130,10 +117,4 @@ const deletePersona = async (req, res) => {
   }
 };
 
-export {
-  createPersona,
-  getAllPersonas,
-  getPersona,
-  updatePersona,
-  deletePersona,
-};
+export { createPersona, getAllPersonas, updatePersona, deletePersona };

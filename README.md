@@ -7,7 +7,7 @@
 ## Instralación
 
 - Instalar nodemon para desarrollo local
-  `$ npm install nodemon - g`
+  `$ npm install nodemon -g`
 - Instala todas las dependencias
   `$ npm i`
 
