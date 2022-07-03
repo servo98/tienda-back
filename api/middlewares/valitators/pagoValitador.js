@@ -12,6 +12,7 @@ const createPagoBodySchema = joi.object({
 });
 
 const getAllPagosQuerySchema = joi.object({
+  correo: joi.string().optional(),
   fecha_corte: joi.date().optional(),
   fecha_pago: joi.date().optional(),
   id_estado: joi.number().integer().optional(),

@@ -31,7 +31,7 @@ const getAllPagos = async (req, res) => {
     //knex.raw(`*, 'Patrol' as "$type"`
     const pagos = await db('pago')
     .join('persona','persona.id','pago.id_persona')
-    .select('persona.nombre', 'pago.*')
+    .select('persona.correo', 'pago.*')
     .where(req.query)
     
     return res.json({
