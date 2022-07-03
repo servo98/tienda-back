@@ -17,7 +17,7 @@ router.get(
   '/pagos',
   auth,
   permisos([1, 3]),
-  validator(pagoValidator.getAllPagosQuerySchema, 'query'),
+  /**validator(pagoValidator.getAllPagosQuerySchema, 'query'),**/
   pagoController.getAllPagos
 );
 router.put(
