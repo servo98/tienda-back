@@ -1,5 +1,3 @@
-import { swLoginRouter } from '../routes/authRoutes.js';
-
 const swagger = {
   openapi: '3.0.0',
   info: {
@@ -13,9 +11,7 @@ const swagger = {
       description: 'Development server',
     },
   ],
-  paths: {
-    ...swLoginRouter,
-  },
+  paths: {},
 };
 
 export default swagger;
