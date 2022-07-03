@@ -1,10 +1,10 @@
 import express from 'express';
 import { actividadController } from '../controllers/index.js';
-import { actividadValidator } from '../middlewares/valitators/index.js';
-import validator from '../middlewares/validator.js';
+import validator, { validators } from '../middlewares/validator.js';
 import { auth, permisos } from '../middlewares/auth.js';
 
 const router = express.Router();
+const { actividadValidator } = validators;
 
 router.get(
   '/getActividadesConInstructores',
@@ -23,6 +23,7 @@ router.put(
   '/actividades/:id',
   auth,
   permisos([1]),
+  validator(actividadValidator.updateActividadBodySchema, 'body'),
   actividadController.updateActividad
 );
 router.delete(
