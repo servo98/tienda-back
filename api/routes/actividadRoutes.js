@@ -81,7 +81,6 @@ router.put(
   '/inscribirActividadInstructor',
   auth,
   permisos([2]),
-  validator(actividadValidator.inscribirActividadBodySchema, 'body'),
   actividadController.inscribirActividadInstructor
 );
 
