@@ -54,8 +54,8 @@ const updatePago = async (req, res) => {
         fecha_pago: pago.id_estado == 2 ? new Date() : undefined,
       });
     pagos.push(id);
+    const actualizado = (await db('pago').select('*').where({ id }))[0];
     if (actualizado.id_tipo > 1 && req.body.continuar) {
-      const actualizado = (await db('pago').select('*').where({ id }))[0];
       delete actualizado.id;
       delete actualizado.fecha_pago;
       const today = new Date();
