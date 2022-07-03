@@ -251,6 +251,13 @@ const inscribirActividadSocio = async (req, res) => {
         id_actividad: req.body.actividadId,
         id_socio: req.persona.id,
       });
+      await db('actividad')
+      .update({
+        'cupo_disponible':
+          'cupo_disponible - 1',
+      }).where({
+        id_actividad,
+      });
       const actividadCosto = (
         await db('actividad').select('costo').where({
           id: req.body.actividadId,
@@ -354,6 +361,13 @@ const bajaActividadSocio = async (req, res) => {
     const deleted = await db('socio_actividad')
       .where({ id_actividad, id_socio: req.persona.id })
       .del();
+    await db('actividad')
+    .update({
+      'cupo_disponible':
+        'cupo_disponible + 1',
+    }).where({
+      id_actividad,
+    });
     return res.json({
       msg: 'Actividad dada de baja',
       status: 200,
