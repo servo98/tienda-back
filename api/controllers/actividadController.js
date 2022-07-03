@@ -155,10 +155,10 @@ const getActividadesSinInstructores = async (_, res) => {
   }
 };
 
-const getActividadesSinSuplente = async (_, res) => {
+const getActividadesSinSuplente = async (req, res) => {
   try {
     const actividades = await db.raw(
-      actividadQueries.getActividadesSinSuplente
+      actividadQueries.getActividadesSinSuplente, [req.persona.id]
     );
     return res.json({
       status: 200,
@@ -170,7 +170,7 @@ const getActividadesSinSuplente = async (_, res) => {
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al buscar actividades sin suplente',
-      error,
+      error: error.message,
       status: 500,
     });
   }
@@ -272,9 +272,9 @@ const inscribirActividadSocio = async (req, res) => {
       .update({
         'cupo_disponible':
           'cupo_disponible - 1',
-      }).where({
-        id_actividad,
-      });
+      }).where(
+        "id", req.body.actividadId
+      );
       const actividadCosto = (
         await db('actividad').select('costo').where({
           id: req.body.actividadId,
@@ -383,7 +383,7 @@ const bajaActividadSocio = async (req, res) => {
       'cupo_disponible':
         'cupo_disponible + 1',
     }).where({
-      id_actividad,
+      id:id_actividad
     });
     return res.json({
       msg: 'Actividad dada de baja',
