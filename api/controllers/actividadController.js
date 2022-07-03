@@ -268,11 +268,17 @@ const inscribirActividadSocio = async (req, res) => {
         id_actividad: req.body.actividadId,
         id_socio: req.persona.id,
       });
+      const {cupo_disponible} = (await db('actividad').select('cupo_disponible').
+      where({
+        id: req.body.actividadId,
+      }))[0];
+
       await db('actividad')
-        .update({
-          cupo_disponible: 'cupo_disponible - 1',
-        })
-        .where('id', req.body.actividadId);
+      .update({
+        cupo_disponible:cupo_disponible-1,
+      }).where(
+        "id", req.body.actividadId
+      );
       const actividadCosto = (
         await db('actividad').select('costo').where({
           id: req.body.actividadId,
