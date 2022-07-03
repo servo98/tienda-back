@@ -16,6 +16,25 @@ const login = async (req, res) => {
         error: 'Datos incorrectos',
       });
     }
+    if(persona.id_rol == 3){
+        const deudas = (
+        await db('pago').select('id').where({ 
+        id_persona: persona.id,
+        id_estado: 1,
+      }).andWhere(
+        'fecha_corte',
+        '<',
+        new Date(),
+      ));
+
+      if(deudas.length > 0){
+        return res.status(400).json({
+          msg: 'El socio tiene pagos pendientes, pase a ventanilla',
+          error: 'El socio tiene pagos pendientes, pase a ventanilla',
+          status: 400,
+        });
+      }
+    }
 
     delete persona.password;
     const token = jwt.encode(persona, config.auth.secret);
