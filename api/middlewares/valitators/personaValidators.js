@@ -24,7 +24,7 @@ const updatePersonaBodySchema = joi.object({
     .string()
     .max(70)
     .regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
-    .optiona(),
+    .optional(),
   id_rol: joi.number().integer().optional(),
   nombre: joi.string().max(70).optional(),
   passsword: joi.string().max(50).optional(),

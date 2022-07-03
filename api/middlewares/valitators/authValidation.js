@@ -5,7 +5,7 @@ const loginBodySchema = joi.object({
     .string()
     .regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
     .required(),
-  passsword: joi.string().required(),
+  password: joi.string().required(),
 });
 
 export { loginBodySchema };
