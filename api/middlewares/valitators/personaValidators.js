@@ -8,7 +8,7 @@ const createPersonaBodySchema = joi.object({
     .required(),
   id_rol: joi.number().integer().required(),
   nombre: joi.string().max(70).required(),
-  passsword: joi.string().max(50).required(),
+  password: joi.string().max(50).required(),
   telefono: joi.string().regex(/^\d+$/).max(12).required(),
 });
 

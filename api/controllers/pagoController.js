@@ -23,14 +23,17 @@ const createPago = async (req, res) => {
 };
 
 const getAllPagos = async (req, res) => {
-  if (req.query.persona.id_rol != 1) {
+  if (req.persona.id_rol != 1) {
     req.query.id_persona = req.persona.id;
   }
-  if(req.query.params.id_estado == "*"){
-    delete params.query.id_estado;
+  if (req.query.id_estado === "*"){
+    delete req.query.id_estado;
   }
-  if(req.params.id_tipo == "*"){
-    delete params.query.id_tipo;
+  if (req.query.id_tipo === "*"){
+    delete req.query.id_tipo;
+  }
+  if (req.query.correo === "*"){
+    delete req.query.correo;
   }
   try {
     //const pagos = await db('pago').select('*').where(req.query)
