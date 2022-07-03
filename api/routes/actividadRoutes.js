@@ -15,11 +15,7 @@ router.post(
   permisos([1]),
   actividadController.createActividad
 );
-router.get(
-  '/actividades',
-  permisos([1, 2, 3]),
-  actividadController.getAllActividads
-);
+router.get('/actividades', actividadController.getAllActividads);
 router.put(
   '/actividades/:id',
   auth,
