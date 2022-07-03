@@ -56,9 +56,8 @@ const getActividadPopulatedById = async (req, res) => {
     return res.json({
       msg: 'Actividad obtenida',
       data: {
-          actividad: actividadObtenida,
-          horarios: actividadObtenida.horario.split(','),
-        
+        actividad: actividadObtenida,
+        horarios: actividadObtenida.horario.split(','),
       },
       status: 200,
     });
@@ -158,7 +157,8 @@ const getActividadesSinInstructores = async (_, res) => {
 const getActividadesSinSuplente = async (req, res) => {
   try {
     const actividades = await db.raw(
-      actividadQueries.getActividadesSinSuplente, [req.persona.id]
+      actividadQueries.getActividadesSinSuplente,
+      [req.persona.id]
     );
     return res.json({
       status: 200,
@@ -269,12 +269,10 @@ const inscribirActividadSocio = async (req, res) => {
         id_socio: req.persona.id,
       });
       await db('actividad')
-      .update({
-        'cupo_disponible':
-          'cupo_disponible - 1',
-      }).where(
-        "id", req.body.actividadId
-      );
+        .update({
+          cupo_disponible: 'cupo_disponible - 1',
+        })
+        .where('id', req.body.actividadId);
       const actividadCosto = (
         await db('actividad').select('costo').where({
           id: req.body.actividadId,
@@ -378,13 +376,19 @@ const bajaActividadSocio = async (req, res) => {
     const deleted = await db('socio_actividad')
       .where({ id_actividad, id_socio: req.persona.id })
       .del();
+
+    const actividad = (
+      await db('actividad').select(['id', 'cupo_disponible']).where({
+        id: id_actividad,
+      })
+    )[0];
     await db('actividad')
-    .update({
-      'cupo_disponible':
-        'cupo_disponible + 1',
-    }).where({
-      id:id_actividad
-    });
+      .update({
+        cupo_disponible: actividad.cupo_disponible + 1,
+      })
+      .where({
+        id: actividad.id,
+      });
     return res.json({
       msg: 'Actividad dada de baja',
       status: 200,
