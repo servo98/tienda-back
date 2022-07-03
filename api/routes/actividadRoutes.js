@@ -1,5 +1,7 @@
 import express from 'express';
 import { actividadController } from '../controllers/index.js';
+import { actividadValidator } from '../middlewares/valitators/index.js';
+import validator from '../middlewares/validator.js';
 import { auth, permisos } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -13,6 +15,7 @@ router.post(
   '/actividades',
   auth,
   permisos([1]),
+  validator(actividadValidator.createActividadBodySchema, 'body'),
   actividadController.createActividad
 );
 router.get('/actividades', actividadController.getAllActividads);
@@ -66,6 +69,7 @@ router.get(
 router.post(
   '/inscribirActividadSocio',
   auth,
+  validator(actividadValidator.inscribirActividadBodySchema, 'body'),
   permisos([3]),
   actividadController.inscribirActividadSocio
 );
@@ -74,6 +78,7 @@ router.put(
   '/inscribirActividadInstructor',
   auth,
   permisos([2]),
+  validator(actividadValidator.inscribirActividadBodySchema, 'body'),
   actividadController.inscribirActividadInstructor
 );
 
