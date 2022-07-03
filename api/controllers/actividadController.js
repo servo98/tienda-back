@@ -48,6 +48,29 @@ const getAllActividads = async (_, res) => {
   }
 };
 
+const getActividadPopulatedById = async (req, res) => {
+  try {
+    const actividadObtenida = (
+      await db.raw(actividadQueries.getActividadPopulatedById, [req.params.id])
+    )[0][0];
+    return res.json({
+      msg: 'Actividad obtenida',
+      data: {
+          actividad: actividadObtenida,
+          horarios: actividadObtenida.horario.split(','),
+        
+      },
+      status: 200,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al obtener la actividad',
+      error: error.message,
+      status: 500,
+    });
+  }
+};
+
 const updateActividad = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
@@ -132,10 +155,10 @@ const getActividadesSinInstructores = async (_, res) => {
   }
 };
 
-const getActividadesSinSuplente = async (_, res) => {
+const getActividadesSinSuplente = async (req, res) => {
   try {
     const actividades = await db.raw(
-      actividadQueries.getActividadesSinSuplente
+      actividadQueries.getActividadesSinSuplente, [req.persona.id]
     );
     return res.json({
       status: 200,
@@ -147,7 +170,7 @@ const getActividadesSinSuplente = async (_, res) => {
   } catch (error) {
     return res.status(500).json({
       msg: 'Error al buscar actividades sin suplente',
-      error,
+      error: error.message,
       status: 500,
     });
   }
@@ -249,9 +272,9 @@ const inscribirActividadSocio = async (req, res) => {
       .update({
         'cupo_disponible':
           'cupo_disponible - 1',
-      }).where({
-        id_actividad,
-      });
+      }).where(
+        "id", req.body.actividadId
+      );
       const actividadCosto = (
         await db('actividad').select('costo').where({
           id: req.body.actividadId,
@@ -360,7 +383,7 @@ const bajaActividadSocio = async (req, res) => {
       'cupo_disponible':
         'cupo_disponible + 1',
     }).where({
-      id_actividad,
+      id:id_actividad
     });
     return res.json({
       msg: 'Actividad dada de baja',
@@ -422,4 +445,5 @@ export {
   bajaActividadSocio,
   bajaActividadInstructor,
   getActividadesInscritasInstructor,
+  getActividadPopulatedById,
 };

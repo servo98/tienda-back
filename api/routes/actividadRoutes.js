@@ -19,6 +19,9 @@ router.post(
   actividadController.createActividad
 );
 router.get('/actividades', actividadController.getAllActividads);
+
+router.get('/actividades/:id', auth, permisos([1]),actividadController.getActividadPopulatedById);
+
 router.put(
   '/actividades/:id',
   auth,
@@ -79,7 +82,6 @@ router.put(
   '/inscribirActividadInstructor',
   auth,
   permisos([2]),
-  validator(actividadValidator.inscribirActividadBodySchema, 'body'),
   actividadController.inscribirActividadInstructor
 );
 
