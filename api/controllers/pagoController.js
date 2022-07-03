@@ -27,10 +27,10 @@ const getAllPagos = async (req, res) => {
     req.query.id_persona = req.persona.id;
   }
   if(req.params.id_estado == "*"){
-    delete params.id_estado;
+    delete params.query.id_estado;
   }
   if(req.params.id_tipo == "*"){
-    delete params.id_tipo;
+    delete params.query.id_tipo;
   }
   try {
     //const pagos = await db('pago').select('*').where(req.query)
