@@ -31,3 +31,5 @@ const withValidation = (schema, object) => async (req, res, next) => {
 };
 
 export default withValidation;
+
+export { default as validators } from './valitators/index.js';
