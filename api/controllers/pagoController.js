@@ -27,7 +27,13 @@ const getAllPagos = async (req, res) => {
     req.query.id_persona = req.persona.id;
   }
   try {
-    const pagos = await db('pago').select('*').where(req.query);
+    //const pagos = await db('pago').select('*').where(req.query)
+    //knex.raw(`*, 'Patrol' as "$type"`
+    const pagos = await db('pago')
+    .join('persona','persona.id','pago.id_persona')
+    .select('persona.nombre', 'pago.*')
+    .where(req.query)
+    
     return res.json({
       msg: 'Pagos obtenidas',
       data: { pagos },
