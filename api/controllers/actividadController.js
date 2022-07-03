@@ -48,6 +48,29 @@ const getAllActividads = async (_, res) => {
   }
 };
 
+const getActividadPopulatedById = async (req, res) => {
+  try {
+    const actividadObtenida = (
+      await db.raw(actividadQueries.getActividadPopulatedById, [req.params.id])
+    )[0][0];
+    return res.json({
+      msg: 'Actividad obtenida',
+      data: {
+          actividad: actividadObtenida,
+          horarios: actividadObtenida.horario.split(','),
+        
+      },
+      status: 200,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: 'Error al obtener la actividad',
+      error: error.message,
+      status: 500,
+    });
+  }
+};
+
 const updateActividad = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
@@ -422,4 +445,5 @@ export {
   bajaActividadSocio,
   bajaActividadInstructor,
   getActividadesInscritasInstructor,
+  getActividadPopulatedById,
 };
