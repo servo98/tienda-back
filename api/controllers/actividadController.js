@@ -24,7 +24,7 @@ const createActividad = async (req, res) => {
   }
 };
 
-const getAllActividads = async (req, res) => {
+const getAllActividads = async (_, res) => {
   try {
     const actividades = (
       await db.raw(actividadQueries.getAllPopulatedActivities)
@@ -51,12 +51,6 @@ const getAllActividads = async (req, res) => {
 const updateActividad = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
-  if (!id) {
-    return res.status(401).json({
-      msg: 'Id required',
-      status: 400,
-    });
-  }
   try {
     const newActividad = await db('actividad').where({ id }).update(body);
     return res.json({

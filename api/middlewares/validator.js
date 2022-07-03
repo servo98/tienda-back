@@ -1,19 +1,31 @@
-import e from 'express';
 import joi from 'joi';
+import errorMessages from '../config/errorMessages.js';
 
 /**
  *
  * @param {joi.Schema} schema
  * @returns
  */
-const withValidation = (schema) => async (req, res, next) => {
+const withValidation = (schema, object) => async (req, res, next) => {
   try {
-    const value = await schema.validateAsync(req.body);
+    const options = {
+      errors: {
+        labels: false,
+        language: 'es',
+      },
+      messages: {
+        es: { ...errorMessages },
+      },
+    };
+    const response = await schema.validateAsync(req[object], options);
+    req[object] = response;
+    console.log(response);
+    next();
   } catch (error) {
     return res.status(400).json({
       status: 400,
       msg: 'Body incorrecto',
-      error: error.msg,
+      error: error,
     });
   }
 };
