@@ -10,26 +10,27 @@ const createActividad = async (req, res) => {
     horario.id_actividad = actividad.id;
   });
   try {
-    await knex.transaction(async t =>{
+    
+    
+    
+    const traslapes = (
+      await db.raw(getTraslapesHorario.getTraslapes, [
+        horarios.id_dia,
+        horarios.id_hora,
+      ])
+    )[0];
+    if(traslapes.length > 0){
+      return res.status(500).json({
+        msg: 'Hay traslapes en la actividad',
+        status: 500,
+        error: JSON.stringify('Hay traslapes en la actividad'),
+      });
+    }else{
+      const actividad_horario = await db('actividad_dia_horario').insert(horarios);
       const actividad = await db('actividad').insert(actividad);
-      
-      const traslapes = (
-        await db.raw(getTraslapesHorario.getTraslapes, [
-          horarios.id_dia,
-          horarios.id_hora,
-        ])
-      )[0];
-      if(traslapes.length > 0){
-        return res.status(500).json({
-          msg: 'Hay traslapes en la actividad',
-          status: 500,
-          error: JSON.stringify('Hay traslapes en la actividad'),
-        });
-      }else{
-        const actividad = await db('actividad_dia_horario').insert(horarios);
-      }
+    }
 
-    });
+    
 
     
     res.json({
