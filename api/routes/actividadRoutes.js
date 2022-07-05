@@ -15,7 +15,7 @@ router.post(
   '/actividades',
   auth,
   permisos([1]),
-  validator(actividadValidator.createActividadBodySchema, 'body'),
+  //validator(actividadValidator.createActividadBodySchema, 'body'),
   actividadController.createActividad
 );
 router.get('/actividades', actividadController.getAllActividads);
