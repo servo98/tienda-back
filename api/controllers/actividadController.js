@@ -25,9 +25,11 @@ const createActividad = async (req, res) => {
           status: 500,
           error: JSON.stringify('Hay traslapes en la actividad'),
         });
+      }else{
+        const actividad = await db('actividad_dia_horario').insert(horarios);
       }
 
-    })
+    });
 
     
     res.json({
