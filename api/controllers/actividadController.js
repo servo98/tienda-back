@@ -3,52 +3,49 @@ import db from '../config/database.js';
 import actividadQueries from '../queries/actividadQueries.js';
 
 const createActividad = async (req, res) => {
+  const idHora = {};
+  const idDia = {};
   
-  const {actividad} = req.body;
-  const {horarios} = req.body.horarios;
-  horarios.forEach(horario=>{
-    horario.id_actividad = actividad.id;
-  });
   try {
+    const {actividad} = req.body;
+    const {horarios} = req.body;
     
     
-    
-    const traslapes = (
-      await db.raw(getTraslapesHorario.getTraslapes, [
-        horarios.id_dia,
-        horarios.id_hora,
-      ])
-    )[0];
-    if(traslapes.length > 0){
+    const idActividad = (await db('actividad').insert(actividad))[0];
+    const horariosOb = (await db('actividad_dia_horario').select(['id_dia', 'id_horario']));
+
+    const a = horarios.map(horario => horario.id_dia + ','+ horario.id_horario);
+    const b = horariosOb.map(horario => horario.id_dia + ','+ horario.id_horario);
+    const c = a.filter(value => b.includes(value));
+    if(c.length > 0){
       return res.status(500).json({
         msg: 'Hay traslapes en la actividad',
         status: 500,
         error: JSON.stringify('Hay traslapes en la actividad'),
       });
-    }else{
-      const actividad_horario = await db('actividad_dia_horario').insert(horarios);
-      const actividad = await db('actividad').insert(actividad);
     }
-
+    horarios.forEach(e =>{
+      e.id_actividad = idActividad;
+    });
+    const actividad_horario1 = await db('actividad_dia_horario').insert(horarios);
     
-
     
+       
     res.json({
       msg: 'Actividad creada',
       status: 200,
       data: {
         actividad: {
           ...req.body,
-          id: actividad[0],
         },
       },
     });
   } catch (error) {
-    await trs.rollback();
+   
     return res.status(500).json({
       msg: 'Eror al crear actividad',
       status: 500,
-      error: JSON.stringify(error),
+      error: error.message,
     });
   }
 };
