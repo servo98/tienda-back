@@ -26,7 +26,7 @@ router.put(
   '/actividades/:id',
   auth,
   permisos([1]),
-  validator(actividadValidator.updateActividadBodySchema, 'body'),
+  //validator(actividadValidator.updateActividadBodySchema, 'body'),
   actividadController.updateActividad
 );
 router.delete(
