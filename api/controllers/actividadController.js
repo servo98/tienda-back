@@ -20,9 +20,11 @@ const createActividad = async (req, res) => {
         ])
       )[0];
       if(traslapes.length > 0){
-        const errorTraslapes = new Error();
-        errorTraslapes.message = "Hay traslapes en el horario";
-        throw errorTraslapes;
+        return res.status(500).json({
+          msg: 'Hay traslapes en la actividad',
+          status: 500,
+          error: JSON.stringify('Hay traslapes en la actividad'),
+        });
       }
 
     })
