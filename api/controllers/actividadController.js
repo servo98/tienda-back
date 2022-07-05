@@ -3,8 +3,31 @@ import db from '../config/database.js';
 import actividadQueries from '../queries/actividadQueries.js';
 
 const createActividad = async (req, res) => {
+  
+  const {actividad} = req.body;
+  const {horarios} = req.body.horarios;
+  horarios.forEach(horario=>{
+    horario.id_actividad = actividad.id;
+  });
   try {
-    const actividad = await db('actividad').insert(req.body);
+    await knex.transaction(async t =>{
+      const actividad = await db('actividad').insert(actividad);
+      
+      const traslapes = (
+        await db.raw(getTraslapesHorario.getTraslapes, [
+          horarios.id_dia,
+          horarios.id_hora,
+        ])
+      )[0];
+      if(traslapes.length > 0){
+        const errorTraslapes = new Error();
+        errorTraslapes.message = "Hay traslapes en el horario";
+        throw errorTraslapes;
+      }
+
+    })
+
+    
     res.json({
       msg: 'Actividad creada',
       status: 200,
@@ -16,6 +39,7 @@ const createActividad = async (req, res) => {
       },
     });
   } catch (error) {
+    await trs.rollback();
     return res.status(500).json({
       msg: 'Eror al crear actividad',
       status: 500,
